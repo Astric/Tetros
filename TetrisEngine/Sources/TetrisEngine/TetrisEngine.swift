@@ -47,7 +47,8 @@ public class TetrisEngine {
     public enum UserAction {
         case moveLeft
         case moveRight
-        case rotate
+        case rotateClockwise
+        case rotateCounterClockwise
         case softDrop
         case hardDrop
     }
@@ -95,8 +96,10 @@ public class TetrisEngine {
             tryMovePieceLeft()
         case .moveRight:
             tryMovePieceRight()
-        case .rotate:
-            tryRotatePiece()
+        case .rotateClockwise:
+            tryRotatePiece(clockwise: true)
+        case .rotateCounterClockwise:
+            tryRotatePiece(clockwise: false)
         case .softDrop:
             tryMovePieceDown()
         case .hardDrop:
@@ -145,7 +148,7 @@ public class TetrisEngine {
         }
     }
 
-    private func tryRotatePiece() {
+    private func tryRotatePiece(clockwise: Bool) {
         guard var piece = currentPiece else {
             return
         }
@@ -154,7 +157,7 @@ public class TetrisEngine {
             pieceMatrix: piece.matrix,
             currentPiecePosition: currentPiecePosition
         ) {
-            piece.rotate(clockwise: true)
+            piece.rotate(clockwise: clockwise)
             currentPiece = piece
         }
     }

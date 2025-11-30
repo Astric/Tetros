@@ -19,42 +19,6 @@ class GameViewController: UIViewController {
     @IBOutlet var levelLabel: UILabel!
     @IBOutlet var scoreLabel: UILabel!
     
-    lazy var swipeLeftRecognizer: UISwipeGestureRecognizer = {
-        let recognizer = UISwipeGestureRecognizer(
-            target: self,
-            action: #selector(handleSwipeLeft)
-        )
-        recognizer.direction = .left
-        return recognizer
-    }()
-
-    lazy var swipeRightRecognizer: UISwipeGestureRecognizer = {
-        let recognizer = UISwipeGestureRecognizer(
-            target: self,
-            action: #selector(handleSwipeRight)
-        )
-        recognizer.direction = .right
-        return recognizer
-    }()
-
-    lazy var tapGestureRecognizer: UITapGestureRecognizer = {
-        let recognizer = UITapGestureRecognizer(
-            target: self,
-            action: #selector(handleSingleTap)
-        )
-
-        return recognizer
-    }()
-
-    lazy var swipeDownRecognizer: UISwipeGestureRecognizer = {
-        let recognizer = UISwipeGestureRecognizer(
-            target: self,
-            action: #selector(handleSwipeDown)
-        )
-        recognizer.direction = .down
-        return recognizer
-    }()
-
     lazy var overlayView: InGameOverlayView = {
         let overlayView = InGameOverlayView(frame: .zero)
         overlayView.delegate = self
@@ -73,13 +37,20 @@ class GameViewController: UIViewController {
     func initializeUI() {
         boardView.translatesAutoresizingMaskIntoConstraints = false
         boardView.isUserInteractionEnabled = true
-        boardView.addGestureRecognizer(swipeLeftRecognizer)
-        boardView.addGestureRecognizer(swipeRightRecognizer)
-        boardView.addGestureRecognizer(swipeDownRecognizer)
-        boardView.addGestureRecognizer(tapGestureRecognizer)
-        //boardView.layer.borderColor = UIColor.systemOrange.cgColor
-        //boardView.layer.borderWidth = 1
         nextPieceView.showsGrid = false
+        
+        let controllerView = ControllerView(frame: view.bounds)
+        controllerView.translatesAutoresizingMaskIntoConstraints = false
+        controllerView.delegate = self
+        view.addSubview(controllerView)
+        
+        NSLayoutConstraint.activate([
+            controllerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            controllerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            controllerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            controllerView.topAnchor.constraint(equalTo: boardView.topAnchor)
+        ])
+        
     }
 
     func startGameLoop() {
@@ -167,7 +138,7 @@ class GameViewController: UIViewController {
     }
 
     @objc func handleSingleTap() {
-        pendingAction = .rotate
+        pendingAction = .rotateClockwise
     }
 
     @objc func handleSwipeDown() {
@@ -218,5 +189,27 @@ extension GameViewController: InGameOverlayViewDelegate {
 
     func inGameOverlayViewDidTapMainMenu() {
         navigationController?.popViewController(animated: true)
+    }
+}
+
+extension GameViewController: ControllerViewDelegate {
+    func didPressDown() {
+        pendingAction = .softDrop
+    }
+
+    func didPressLeft() {
+        pendingAction = .moveLeft
+    }
+
+    func didPressRight() {
+        pendingAction = .moveRight
+    }
+
+    func didPressA() {
+        pendingAction = .rotateCounterClockwise
+    }
+
+    func didPressB() {
+        pendingAction = .rotateClockwise
     }
 }

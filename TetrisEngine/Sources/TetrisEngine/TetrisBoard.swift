@@ -79,6 +79,10 @@ public class TetrisBoard {
                     return false
                 }
 
+                if boardX >= columns {
+                    return false
+                }
+
                 if grid[boardY][boardX] != 0 {
                     return false
                 }
@@ -103,6 +107,10 @@ public class TetrisBoard {
                 // Skip collision check for cells above the board
                 if boardY < 0 {
                     continue
+                }
+
+                if boardX < 0 {
+                    return false
                 }
 
                 if boardX >= columns {
