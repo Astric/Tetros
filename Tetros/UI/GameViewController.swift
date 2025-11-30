@@ -119,6 +119,7 @@ class GameViewController: UIViewController {
         
         if engine.isGameOver {
             stopGameLoop()
+            saveHighscore()
             showGameOver()
         }
     }
@@ -185,6 +186,20 @@ class GameViewController: UIViewController {
                 self.overlayView.removeFromSuperview()
             }
         }
+    }
+    
+    func saveHighscore() {
+        guard engine.score > 0 else {
+            return
+        }
+        let highScore = HighScore(
+            score: engine.score,
+            level: engine.level,
+            linesCleared: engine.linesCleared,
+            date: Date()
+        )
+        
+        HighScoreManager.shared.saveToPersistence(highScore: highScore)
     }
 }
 
