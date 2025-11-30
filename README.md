@@ -6,3 +6,6 @@ The game logic lives in a local SPM package.
 
 UI Is rendered with UIKit/CoreGraphics.
 
+Game controls:
+
+<img width="320" alt="Game Controls" src="https://github.com/user-attachments/assets/44dcdd95-72c1-4a3d-b8c6-53e06c58b99d" />
